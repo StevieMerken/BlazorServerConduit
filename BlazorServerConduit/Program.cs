@@ -1,9 +1,13 @@
 
+using BlazorServerConduit.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+builder.Services.AddHttpClient<ArticlesService>();
 
 var app = builder.Build();
 

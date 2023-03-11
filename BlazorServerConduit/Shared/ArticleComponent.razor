@@ -1,0 +1,30 @@
+﻿@using BlazorServerConduit.Services;
+
+<div class="article-preview">
+    <div class="article-meta">
+        <a href="profile.html"><img src="@Article.Author.Image" /></a>
+        <div class="info">
+            <a href="" class="author">@Article.Author.UserName</a>
+            <span class="date">@Article.UpdatedAt.ToString("D")</span>
+        </div>
+        <button class="btn btn-outline-primary btn-sm pull-xs-right">
+            <i class="ion-heart"></i> @Article.FavoritesCount
+        </button>
+    </div>
+    <a href="" class="preview-link">
+        <h1>@Article.Title</h1>
+        <p>@Article.Description</p>
+        <span>Read more...</span>
+        <ul class="tag-list">
+            @foreach(var tag in Article.TagList)
+            {
+                <li @key=tag class="tag-default tag-pill tag-outline">@tag</li>
+            }
+        </ul>
+    </a>
+</div>
+
+@code {
+    [Parameter]
+    public Article Article { get; set; } = default!;
+}
