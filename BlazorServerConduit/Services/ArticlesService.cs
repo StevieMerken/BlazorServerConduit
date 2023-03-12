@@ -1,20 +1,29 @@
 ﻿using BlazorServerConduit.Models;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Globalization;
 
 namespace BlazorServerConduit.Services
 {
-    public class ArticlesService
+    public class ArticlesService : BaseService
     {
-        private readonly HttpClient _httpClient;
-
-        public ArticlesService(HttpClient httpClient, IConfiguration configuration)
+        public ArticlesService(HttpClient httpClient, IConfiguration configuration) : base(httpClient, configuration)
         {
-            _httpClient = httpClient;
-            _httpClient.BaseAddress = new Uri(configuration["BaseUrlApi"]);
         }
 
-        public async Task<MultipleArticlesResponse> GetArticles(int limit, int offset)
+        public async Task<MultipleArticlesResponse> GetArticlesAsync(ArticleFilter articleFilter)
         {
-            return await _httpClient.GetFromJsonAsync<MultipleArticlesResponse>($"articles?limit={limit}&offset={offset}");
+            var queryParams = new Dictionary<string, string>()
+            {
+                {"limit", articleFilter.Limit.ToString(CultureInfo.InvariantCulture) },
+                {"offset", articleFilter.Offset.ToString(CultureInfo.InvariantCulture) },
+            };
+
+            if (!string.IsNullOrEmpty(articleFilter.Tag))
+            {
+                queryParams.Add("tag", articleFilter.Tag);
+            }
+
+            return await HttpClient.GetFromJsonAsync<MultipleArticlesResponse>(QueryHelpers.AddQueryString("articles", queryParams));
         }
     }
 }

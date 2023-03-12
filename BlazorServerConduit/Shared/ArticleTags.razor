@@ -1,0 +1,14 @@
+﻿@if (Tags is not null)
+{
+    <ul class="tag-list">
+        @foreach (var tag in Tags)
+        {
+            <li @key=tag class="tag-default tag-pill tag-outline">@tag</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public List<string>? Tags { get; set; }
+}

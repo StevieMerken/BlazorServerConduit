@@ -1,0 +1,43 @@
+﻿<div class="feed-toggle">
+    <ul class="nav nav-pills outline-active">
+        @*TODO only if logged in*@
+        <li class="nav-item">
+            @*disabled*@
+            <a class="nav-link @(Filter.FeedType == FeedType.Personal ? "active":"")" href="" @onclick="()=>SetFeedType(FeedType.Personal)">Your Feed</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Filter.FeedType == FeedType.Global ? "active":"")" href="" @onclick="()=>SetFeedType(FeedType.Global)">Global Feed</a>
+        </li>
+        @if (Filter.Tag is not null)
+        {
+            <li class="nav-item">
+                <a href="" class="nav-link active">
+                    <i class="ion-pound"></i> @Filter.Tag
+                </a>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public ArticleFilter Filter { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<ArticleFilter> OnFilterChanged { get; set; }
+
+    private void SetFeedType(FeedType feedType)
+    {
+        switch (feedType)
+        {
+            case FeedType.Global:
+                Filter = Filter with { Tag = null, FeedType = FeedType.Global };
+                break;
+            case FeedType.Personal:
+                Filter = Filter with { Tag = null, FeedType = FeedType.Personal };
+                break;
+        }
+
+        OnFilterChanged.InvokeAsync(Filter);
+    }
+}

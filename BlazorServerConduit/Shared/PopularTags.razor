@@ -1,0 +1,28 @@
+﻿@inject TagService TagService;
+
+<p>Popular Tags</p>
+
+@if(_tagResponse is not null)
+{
+    <div class="tag-list">
+        @foreach (var tag in _tagResponse.Tags)
+        {
+            <a @key=tag href="" class="tag-pill tag-default" @onclick="() => OnTagSelected.InvokeAsync(tag)">@tag</a>
+        }
+    </div>
+}
+
+@code 
+{
+    private TagResponse? _tagResponse;
+
+    [Parameter]
+    public EventCallback<string> OnTagSelected { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _tagResponse = await TagService.GetTagsAsync();
+    }
+
+}

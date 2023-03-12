@@ -15,12 +15,7 @@
         <h1>@Article.Title</h1>
         <p>@Article.Description</p>
         <span>Read more...</span>
-        <ul class="tag-list">
-            @foreach(var tag in Article.TagList)
-            {
-                <li @key=tag class="tag-default tag-pill tag-outline">@tag</li>
-            }
-        </ul>
+        <ArticleTags Tags="Article.TagList"/>
     </a>
 </div>
 

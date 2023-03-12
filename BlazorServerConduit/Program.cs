@@ -8,6 +8,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddHttpClient<ArticlesService>();
+builder.Services.AddHttpClient<TagService>();
 
 var app = builder.Build();
 
