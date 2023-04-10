@@ -1,5 +1,6 @@
 
 using BlazorServerConduit.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/Forbidden/"; //TODO
+    });
+
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<ArticlesService>();
 builder.Services.AddHttpClient<TagService>();
+builder.Services.AddHttpClient<UserService>();
 
 var app = builder.Build();
 
@@ -23,6 +34,9 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseRouting();
 

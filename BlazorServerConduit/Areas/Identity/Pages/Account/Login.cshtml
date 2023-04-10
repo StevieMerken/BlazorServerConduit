@@ -1,0 +1,38 @@
+﻿@page
+@{
+    Layout = "../_layout";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@model BlazorServerConduit.Areas.Identity.Pages.Shared.LoginModel
+
+<div>
+    <partial name="_Header"></partial>
+
+    <div class="auth-page">
+        <div class="container page">
+            <div class="row">
+                <div class="col-md-6 offset-md-3 col-xs-12">
+                    <h1 class="text-xs-center">Sign in</h1>
+                    <p class="text-xs-center">
+                        <a href="Identity/Account/Register">Need an account?</a>
+                    </p>
+
+                    <form method="post">
+                        <div asp-validation-summary="All" class="error-messages"></div>
+
+                        <fieldset class="form-group">
+                            <input class="form-control form-control-lg" type="text" placeholder="Email" asp-for="User.Email" />
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input class="form-control form-control-lg" type="password" placeholder="Password" asp-for="User.Password"/>
+                        </fieldset>
+                        <button type="submit" class="btn btn-lg btn-primary pull-xs-right">Sign in</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_Footer" ></partial>
+</div>

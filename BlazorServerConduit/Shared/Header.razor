@@ -1,4 +1,5 @@
-﻿<nav class="navbar navbar-light">
+﻿<CascadingAuthenticationState>
+<nav class="navbar navbar-light">
     <div class="container">
         <a class="navbar-brand" href="index.html">conduit</a>
         <ul class="nav navbar-nav pull-xs-right">
@@ -6,18 +7,25 @@
                 <!-- Add "active" class when you're on that page" -->
                 <a class="nav-link active" href="">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href=""> <i class="ion-compose"></i>&nbsp;New Article </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href=""> <i class="ion-gear-a"></i>&nbsp;Settings </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Sign in</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="">Sign up</a>
-            </li>
+            <AuthorizeView>
+                <Authorized>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""> <i class="ion-compose"></i>&nbsp;New Article </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href=""> <i class="ion-gear-a"></i>&nbsp;Settings </a>
+                    </li>
+                </Authorized>
+                <NotAuthorized>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Identity/Account/Login">Sign in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="">Sign up</a>
+                    </li>
+                </NotAuthorized>
+            </AuthorizeView>
         </ul>
     </div>
 </nav>
+</CascadingAuthenticationState>

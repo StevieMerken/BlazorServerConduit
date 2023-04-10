@@ -1,0 +1,72 @@
+﻿@page "/login"
+
+@inject UserService UserService
+@inject NavigationManager NavigationManager
+
+<div class="auth-page">
+    <div class="container page">
+        <div class="row">
+            <div class="col-md-6 offset-md-3 col-xs-12">
+                <h1 class="text-xs-center">Sign up</h1>
+                <p class="text-xs-center">
+                    <a href="">Have an account?</a>
+                </p>
+
+                <EditForm EditContext="@_editContext" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <CustomValidation @ref="_customValidation" />
+
+                    @if (_editContext is not null && _editContext.GetValidationMessages().Any())
+                    {
+                        <ul class="error-messages">
+                            @foreach(var errorMessage in _editContext.GetValidationMessages())
+                            {
+                                <li>@errorMessage</li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>no errors</span>
+                    }
+
+                    <fieldset class="form-group">
+                        <InputText class="form-control form-control-lg" type="text" placeholder="Email" @bind-Value="_viewModel.Email" />
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <InputText class="form-control form-control-lg" type="password" placeholder="Password" @bind-Value="_viewModel.Password"/>
+                    </fieldset>
+                    <button type="submit" class="btn btn-lg btn-primary pull-xs-right">Sign up</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private EditContext? _editContext;
+    private LoginFormModel _viewModel = new LoginFormModel();
+    private CustomValidation? _customValidation;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _editContext = new EditContext(_viewModel);
+    }
+
+    private async void HandleValidSubmit()
+    {
+        _customValidation?.ClearErrors();
+
+        var loginResult = await UserService.AuthenticateAsync(_viewModel.Email, _viewModel.Password);
+
+        if(loginResult.Error is not null)
+        {
+            _customValidation?.DisplayErrors(loginResult.Error.Errors);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}
