@@ -16,8 +16,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Forbidden/"; //TODO
     });
 
+builder.Services.AddTransient<AuthenticationHttpMessageHandler>();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient<ArticlesService>();
+builder.Services.AddHttpClient<ArticlesService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
 builder.Services.AddHttpClient<TagService>();
 builder.Services.AddHttpClient<UserService>();
 

@@ -18,7 +18,6 @@ namespace BlazorServerConduit.Services
 
         public async Task<ApiResponse<UserResponse>> AuthenticateAsync(string email, string password)
         {
-            //https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-7.0
             var authResult = await HttpClient.PostAsJsonAsync($"users/login", new LoginUserRequest(new LoginUser(email, password)));
 
             if (authResult.IsSuccessStatusCode)
@@ -28,8 +27,8 @@ namespace BlazorServerConduit.Services
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, email),
-                    new Claim("FullName", userDetails.user.Username),
-                    new Claim("ApiToken", userDetails.user.Token),
+                    new Claim(Claims.UserNameClaim, userDetails.user.Username),
+                    new Claim(Claims.ApiToken, userDetails.user.Token),
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -39,12 +38,12 @@ namespace BlazorServerConduit.Services
                     //AllowRefresh = <bool>,
                     // Refreshing the authentication session should be allowed.
 
-                    //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
                     // The time at which the authentication ticket expires. A 
                     // value set here overrides the ExpireTimeSpan option of 
                     // CookieAuthenticationOptions set with AddCookie.
 
-                    //IsPersistent = true,
+                    IsPersistent = true,
                     // Whether the authentication session is persisted across 
                     // multiple requests. When used with cookies, controls
                     // whether the cookie's lifetime is absolute (matching the

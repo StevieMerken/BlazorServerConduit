@@ -6,6 +6,9 @@ namespace BlazorServerConduit.Services
 {
     public class ArticlesService : BaseService
     {
+        private string _globalFeedUrl = "articles";
+        private string _personalFeedUrl = "articles/feed";
+
         public ArticlesService(HttpClient httpClient, IConfiguration configuration) : base(httpClient, configuration)
         {
         }
@@ -23,7 +26,14 @@ namespace BlazorServerConduit.Services
                 queryParams.Add("tag", articleFilter.Tag);
             }
 
-            return await HttpClient.GetFromJsonAsync<MultipleArticlesResponse>(QueryHelpers.AddQueryString("articles", queryParams));
+            string feed = articleFilter.FeedType switch
+            {
+                FeedType.Global => _globalFeedUrl,
+                FeedType.Personal => _personalFeedUrl,
+                FeedType.Tag => _globalFeedUrl,
+            };
+
+            return await HttpClient.GetFromJsonAsync<MultipleArticlesResponse>(QueryHelpers.AddQueryString(feed, queryParams));
         }
     }
 }
