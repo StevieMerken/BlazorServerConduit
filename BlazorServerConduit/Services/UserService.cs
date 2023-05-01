@@ -62,11 +62,11 @@ namespace BlazorServerConduit.Services
                                                                    authProperties);
 
 
-                return new ApiResponse<UserResponse>(userDetails, null);
+                return ApiResponse<UserResponse>.FromSucces(userDetails);
             }
             else
             {
-                return new ApiResponse<UserResponse>(null, await authResult.Content.ReadFromJsonAsync<GenericErrorModel>());
+                return ApiResponse<UserResponse>.FromError(await authResult.Content.ReadFromJsonAsync<GenericErrorModel>());
             }
         }
     }

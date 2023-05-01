@@ -7,9 +7,7 @@
             <a href="" class="author">@Article.Author.UserName</a>
             <span class="date">@Article.UpdatedAt.ToString("D")</span>
         </div>
-        <button class="btn btn-outline-primary btn-sm pull-xs-right">
-            <i class="ion-heart"></i> @Article.FavoritesCount
-        </button>
+        <FavoriteButton Article="Article" class="pull-xs-right"></FavoriteButton>
     </div>
     <a href="" class="preview-link">
         <h1>@Article.Title</h1>

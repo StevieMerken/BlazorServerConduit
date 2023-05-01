@@ -1,6 +1,7 @@
 ﻿using BlazorServerConduit.Models;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Globalization;
+using System.Net;
 
 namespace BlazorServerConduit.Services
 {
@@ -31,9 +32,42 @@ namespace BlazorServerConduit.Services
                 FeedType.Global => _globalFeedUrl,
                 FeedType.Personal => _personalFeedUrl,
                 FeedType.Tag => _globalFeedUrl,
+                _ => throw new NotImplementedException(),
             };
 
             return await HttpClient.GetFromJsonAsync<MultipleArticlesResponse>(QueryHelpers.AddQueryString(feed, queryParams));
+        }
+
+        public async Task<ApiResponse<SingleArticleResponse>> FavoriteArticleAsync(Article article)
+        {
+            var response = await HttpClient.PostAsync($"articles/{article.Slug}/favorite", new StringContent(""));
+
+            if(response.IsSuccessStatusCode)
+            {
+                return ApiResponse<SingleArticleResponse>.FromSucces(await response.Content.ReadFromJsonAsync<SingleArticleResponse>());
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return ApiResponse<SingleArticleResponse>.FromError(new GenericErrorModel(new Dictionary<string, List<string>>()));
+            }
+
+            return ApiResponse<SingleArticleResponse>.FromError(await response.Content.ReadFromJsonAsync<GenericErrorModel>());
+        }
+
+        public async Task<ApiResponse<SingleArticleResponse>> UnfavoriteArticleAsync(Article article)
+        {
+            var response = await HttpClient.DeleteAsync($"articles/{article.Slug}/favorite");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return ApiResponse<SingleArticleResponse>.FromSucces(await response.Content.ReadFromJsonAsync<SingleArticleResponse>());
+            }
+            else if (response.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return ApiResponse<SingleArticleResponse>.FromError(new GenericErrorModel(new Dictionary<string, List<string>>()));
+            }
+
+            return ApiResponse<SingleArticleResponse>.FromError(await response.Content.ReadFromJsonAsync<GenericErrorModel>());
         }
     }
 }

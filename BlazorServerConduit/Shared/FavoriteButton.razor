@@ -1,0 +1,42 @@
+﻿@inherits MyComponentBase
+@inject ArticlesService ArticlesService
+
+<button class="btn btn-sm @_classes @(Article.Favorited ? "btn-primary": "btn-outline-primary") @(_isSubmitting ? "disabled":"")" @attributes=_attributes @onclick="OnSubmit" disabled="@_isSubmitting">
+    <i class="ion-heart"></i> @Article.FavoritesCount
+</button>
+
+
+@code {
+    private bool _isSubmitting = false;
+
+    [Parameter, EditorRequired]
+    public Article Article { get; set; }
+
+    private async void OnSubmit()
+    {
+        try
+        {
+            _isSubmitting = true;
+
+            ApiResponse<SingleArticleResponse> response;
+            if (Article.Favorited)
+            {
+                response = await ArticlesService.UnfavoriteArticleAsync(Article);
+            }
+            else
+            {
+                response = await ArticlesService.FavoriteArticleAsync(Article);
+            }
+
+            if (response.IsSuccess)
+            {
+                Article = response.SuccessData.Article;
+            }
+        }
+        finally
+        {
+            _isSubmitting = false;
+            StateHasChanged();
+        }
+    }
+}
