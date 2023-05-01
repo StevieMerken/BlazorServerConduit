@@ -1,0 +1,10 @@
+﻿<a href=""><img src="@Article.Author.Image" /></a>
+<div class="info">
+    <a href="/@@@(Article.Author.UserName)" class="author">@Article.Author.UserName</a>
+    <span class="date">@Article.UpdatedAt.ToString("D")</span>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Article Article { get; set; }
+}

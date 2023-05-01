@@ -1,0 +1,42 @@
+﻿@inherits MyComponentBase
+@inject ProfileService ProfileService
+
+<button class="btn btn-sm action-btn @_classes @(Author.Following ? "btn-secondary": "btn-outline-secondary") @(_isSubmitting ? "disabled":"")" @attributes=_attributes @onclick="OnSubmit">
+    <i class="ion-plus-round"></i>
+    &nbsp; @(Author.Following ? "Unfollow" : "Follow") @Author.UserName
+</button>
+
+@code {
+    private bool _isSubmitting = false;
+
+    [Parameter, EditorRequired]
+    public Profile Author { get; set; }
+
+    private async void OnSubmit()
+    {
+        try
+        {
+            _isSubmitting = true;
+            ApiResponse<ProfileResponse> response;
+            if (Author.Following) 
+            {
+                response = await ProfileService.UnfollowProfileAsync(Author.UserName);
+            }
+            else
+            {
+                response = await ProfileService.FollowProfileAsync(Author.UserName);
+            }
+
+            if (response.IsSuccess)
+            {
+                //TODO should be global update
+                Author = response.SuccessData.Profile;
+            }
+        }
+        finally
+        {
+            _isSubmitting = false;
+            StateHasChanged();
+        }
+    }
+}

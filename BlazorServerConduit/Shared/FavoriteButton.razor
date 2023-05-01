@@ -2,7 +2,16 @@
 @inject ArticlesService ArticlesService
 
 <button class="btn btn-sm @_classes @(Article.Favorited ? "btn-primary": "btn-outline-primary") @(_isSubmitting ? "disabled":"")" @attributes=_attributes @onclick="OnSubmit" disabled="@_isSubmitting">
-    <i class="ion-heart"></i> @Article.FavoritesCount
+    <i class="ion-heart"></i> 
+    @if (ShowText)
+    {
+        <span>&nbsp;@(Article.Favorited ? "Unfavorite Article": "Favorite Article")</span>
+        <span class="counter">(@(Article.FavoritesCount))</span>
+    } 
+    else 
+    {
+        @Article.FavoritesCount
+    }
 </button>
 
 
@@ -11,6 +20,9 @@
 
     [Parameter, EditorRequired]
     public Article Article { get; set; }
+
+    [Parameter]
+    public bool ShowText { get; set; }
 
     private async void OnSubmit()
     {
@@ -30,6 +42,7 @@
 
             if (response.IsSuccess)
             {
+                //TODO this should be a "global" update
                 Article = response.SuccessData.Article;
             }
         }

@@ -1,6 +1,4 @@
-﻿using BlazorServerConduit.Services;
-
-namespace BlazorServerConduit.Models
+﻿namespace BlazorServerConduit.Models
 {
     public record Article(string Slug,
                           string Title,

@@ -38,6 +38,17 @@ namespace BlazorServerConduit.Services
             return await HttpClient.GetFromJsonAsync<MultipleArticlesResponse>(QueryHelpers.AddQueryString(feed, queryParams));
         }
 
+        public async Task<ApiResponse<SingleArticleResponse>> GetArticleAsync(string slug)
+        {
+            var response = await HttpClient.GetAsync($"articles/{slug}");
+            if (response.IsSuccessStatusCode)
+            {
+                return ApiResponse<SingleArticleResponse>.FromSucces(await response.Content.ReadFromJsonAsync<SingleArticleResponse>());
+            }
+
+            return ApiResponse<SingleArticleResponse>.FromError(await response.Content.ReadFromJsonAsync<GenericErrorModel>());
+        }
+
         public async Task<ApiResponse<SingleArticleResponse>> FavoriteArticleAsync(Article article)
         {
             var response = await HttpClient.PostAsync($"articles/{article.Slug}/favorite", new StringContent(""));

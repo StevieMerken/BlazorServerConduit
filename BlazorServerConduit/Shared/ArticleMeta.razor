@@ -1,0 +1,11 @@
+﻿<div class="article-meta">
+    <ArticleAuthor Article="Article"></ArticleAuthor>
+    <FollowAuthorButton Author="Article.Author"></FollowAuthorButton>
+    &nbsp;&nbsp;
+    <FavoriteButton Article="Article" ShowText=true></FavoriteButton>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Article Article { get; set; }
+}

@@ -19,8 +19,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddTransient<AuthenticationHttpMessageHandler>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<ArticlesService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
-builder.Services.AddHttpClient<TagService>();
-builder.Services.AddHttpClient<UserService>();
+builder.Services.AddHttpClient<TagService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
+builder.Services.AddHttpClient<UserService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
+builder.Services.AddHttpClient<ProfileService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
 
 var app = builder.Build();
 
