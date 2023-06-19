@@ -1,8 +1,14 @@
 
 using BlazorServerConduit.Services;
+using BlazorServerConduit.Store;
+using Fluxor;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Fluxor
+var currentAssembly = typeof(ArticleState).Assembly;
+builder.Services.AddFluxor(options => options.ScanAssemblies(currentAssembly));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -22,6 +28,7 @@ builder.Services.AddHttpClient<ArticlesService>().AddHttpMessageHandler<Authenti
 builder.Services.AddHttpClient<TagService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
 builder.Services.AddHttpClient<UserService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
 builder.Services.AddHttpClient<ProfileService>().AddHttpMessageHandler<AuthenticationHttpMessageHandler>();
+
 
 var app = builder.Build();
 

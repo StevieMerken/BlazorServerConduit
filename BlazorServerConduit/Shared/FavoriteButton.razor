@@ -1,4 +1,6 @@
-﻿@inherits MyComponentBase
+﻿@using BlazorServerConduit.Store;
+@using Fluxor;
+@inherits MyComponentBase
 @inject ArticlesService ArticlesService
 
 <button class="btn btn-sm @_classes @(Article.Favorited ? "btn-primary": "btn-outline-primary") @(_isSubmitting ? "disabled":"")" @attributes=_attributes @onclick="OnSubmit" disabled="@_isSubmitting">
@@ -23,33 +25,19 @@
 
     [Parameter]
     public bool ShowText { get; set; }
+    
+    [Inject]
+    public IDispatcher Dispatcher { get; set; }
 
     private async void OnSubmit()
     {
-        try
+        if (Article.Favorited)
         {
-            _isSubmitting = true;
-
-            ApiResponse<SingleArticleResponse> response;
-            if (Article.Favorited)
-            {
-                response = await ArticlesService.UnfavoriteArticleAsync(Article);
-            }
-            else
-            {
-                response = await ArticlesService.FavoriteArticleAsync(Article);
-            }
-
-            if (response.IsSuccess)
-            {
-                //TODO this should be a "global" update
-                Article = response.SuccessData.Article;
-            }
+            Dispatcher.Dispatch(new UnfavoriteArticleAction(Article.Slug));
         }
-        finally
+        else
         {
-            _isSubmitting = false;
-            StateHasChanged();
+            Dispatcher.Dispatch(new FavoriteArticleAction(Article.Slug));
         }
     }
 }

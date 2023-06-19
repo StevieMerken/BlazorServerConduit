@@ -49,9 +49,9 @@ namespace BlazorServerConduit.Services
             return ApiResponse<SingleArticleResponse>.FromError(await response.Content.ReadFromJsonAsync<GenericErrorModel>());
         }
 
-        public async Task<ApiResponse<SingleArticleResponse>> FavoriteArticleAsync(Article article)
+        public async Task<ApiResponse<SingleArticleResponse>> FavoriteArticleAsync(string slug)
         {
-            var response = await HttpClient.PostAsync($"articles/{article.Slug}/favorite", new StringContent(""));
+            var response = await HttpClient.PostAsync($"articles/{slug}/favorite", new StringContent(""));
 
             if(response.IsSuccessStatusCode)
             {
@@ -65,9 +65,9 @@ namespace BlazorServerConduit.Services
             return ApiResponse<SingleArticleResponse>.FromError(await response.Content.ReadFromJsonAsync<GenericErrorModel>());
         }
 
-        public async Task<ApiResponse<SingleArticleResponse>> UnfavoriteArticleAsync(Article article)
+        public async Task<ApiResponse<SingleArticleResponse>> UnfavoriteArticleAsync(string slug)
         {
-            var response = await HttpClient.DeleteAsync($"articles/{article.Slug}/favorite");
+            var response = await HttpClient.DeleteAsync($"articles/{slug}/favorite");
 
             if (response.IsSuccessStatusCode)
             {

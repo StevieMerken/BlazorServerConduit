@@ -11,4 +11,8 @@
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Fluxor.Blazor.Web" Version="5.7.0" />
+  </ItemGroup>
+
 </Project>

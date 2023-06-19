@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Fluxor.Blazor.Web.Components;
+using Microsoft.AspNetCore.Components;
 
 namespace BlazorServerConduit.Shared
 {
     /// <summary>
     /// See https://github.com/dotnet/aspnetcore/issues/45230
     /// </summary>
-    public class MyComponentBase : ComponentBase
+    public class MyComponentBase : FluxorComponent
     {
         protected IReadOnlyDictionary<string, object>? _attributes;
         protected string _classes = "";

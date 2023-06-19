@@ -1,16 +1,21 @@
 ﻿@page "/article/{slug}"
+@using BlazorServerConduit.Store;
+@using Fluxor;
 @inject ArticlesService ArticlesService;
 
-@if(Article is null)
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@if(ArticleState.Value.Article is null)
 {
     <p>Loading article...</p>
 }
-else{
+else
+{
 <div class="article-page">
     <div class="banner">
         <div class="container">
-            <h1>@Article.Title</h1>
-            <ArticleMeta Article="Article" ></ArticleMeta>
+            <h1>@ArticleState.Value.Article.Title</h1>
+            <ArticleMeta Article="ArticleState.Value.Article"></ArticleMeta>
         </div>
     </div>
 
@@ -18,17 +23,17 @@ else{
         <div class="row article-content">
             <div class="col-md-12">
                 <div>
-                    @Article.Body
+                     @ArticleState.Value.Article.Body
                 </div>
                 <br/>
-                <ArticleTags Tags="Article.TagList"></ArticleTags>
+                <ArticleTags Tags="ArticleState.Value.Article.TagList"></ArticleTags>
             </div>            
         </div>
 
         <hr />
 
         <div class="article-actions">
-            <ArticleMeta Article="Article"></ArticleMeta>
+            <ArticleMeta Article="ArticleState.Value.Article"></ArticleMeta>
         </div>
 
         @*<div class="row">
@@ -88,19 +93,15 @@ else{
     [Parameter]
     public string Slug { get; set; }
 
-    public Article? Article { get; set; }
+    [Inject]
+    private IState<ArticleState> ArticleState { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    [Inject]
+    public IDispatcher Dispatcher { get; set; }
+
+    protected override void OnInitialized()
     {
-        var articleResponse = await ArticlesService.GetArticleAsync(Slug);
-
-        if (articleResponse.IsSuccess)
-        {
-            Article = articleResponse.SuccessData.Article;
-        }
-        else
-        {
-            //TODO redirect
-        }
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchArticleAction(Slug));
     }
 }
