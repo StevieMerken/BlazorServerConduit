@@ -1,8 +1,8 @@
-﻿using BlazorServerConduit.Models;
-using BlazorServerConduit.Services;
+﻿using BlazorServerConduit.Services;
+using BlazorServerConduit.Store.Articles.Actions;
 using Fluxor;
 
-namespace BlazorServerConduit.Store
+namespace BlazorServerConduit.Store.Articles.Effects
 {
     public class Effects
     {
@@ -11,6 +11,16 @@ namespace BlazorServerConduit.Store
         public Effects(ArticlesService http)
         {
             Http = http;
+        }
+
+        [EffectMethod]
+        public async Task HandleFetchArticlesAction(FetchArticlesAction action, IDispatcher dispatcher)
+        {
+            var articles = await Http.GetArticlesAsync(action.Filter);
+            if (articles is not null)
+            {
+                dispatcher.Dispatch(new FetchArticlesResultAction(articles));
+            }
         }
 
         [EffectMethod]
@@ -43,16 +53,4 @@ namespace BlazorServerConduit.Store
             }
         }
     }
-
-    public record FetchArticleAction(string Slug);
-
-    public record FetchArticleResultAction(Article Article);
-
-    public record FavoriteArticleAction(string Slug);
-
-    public record FavoriteArticleResultAction(Article Article);
-
-    public record UnfavoriteArticleAction(string Slug);
-
-    public record UnfavoriteArticleResultAction(Article Article);
 }

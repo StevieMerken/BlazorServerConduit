@@ -1,11 +1,14 @@
 ﻿@page "/article/{slug}"
 @using BlazorServerConduit.Store;
+@using BlazorServerConduit.Store.Articles;
+@using BlazorServerConduit.Store.Articles.Actions;
 @using Fluxor;
+
 @inject ArticlesService ArticlesService;
 
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
-@if(ArticleState.Value.Article is null)
+@if(ArticleState.Value.SelectedArticle is null)
 {
     <p>Loading article...</p>
 }
@@ -14,8 +17,8 @@ else
 <div class="article-page">
     <div class="banner">
         <div class="container">
-            <h1>@ArticleState.Value.Article.Title</h1>
-            <ArticleMeta Article="ArticleState.Value.Article"></ArticleMeta>
+            <h1>@ArticleState.Value.SelectedArticle.Title</h1>
+            <ArticleMeta Article="ArticleState.Value.SelectedArticle"></ArticleMeta>
         </div>
     </div>
 
@@ -23,17 +26,17 @@ else
         <div class="row article-content">
             <div class="col-md-12">
                 <div>
-                     @ArticleState.Value.Article.Body
+                    @ArticleState.Value.SelectedArticle.Body
                 </div>
                 <br/>
-                <ArticleTags Tags="ArticleState.Value.Article.TagList"></ArticleTags>
+                <ArticleTags Tags="ArticleState.Value.SelectedArticle.TagList"></ArticleTags>
             </div>            
         </div>
 
         <hr />
 
         <div class="article-actions">
-            <ArticleMeta Article="ArticleState.Value.Article"></ArticleMeta>
+                <ArticleMeta Article="ArticleState.Value.SelectedArticle"></ArticleMeta>
         </div>
 
         @*<div class="row">

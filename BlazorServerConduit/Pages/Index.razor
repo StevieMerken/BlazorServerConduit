@@ -1,7 +1,9 @@
 ﻿@page "/"
-@using BlazorServerConduit.Services;
+@using BlazorServerConduit.Store.Articles;
+@using BlazorServerConduit.Store.Articles.Actions;
+@using Fluxor;
 
-@inject ArticlesService ArticleService;
+@inherits MyComponentBase
 
 <PageTitle>Home</PageTitle>
 
@@ -18,9 +20,10 @@
             <div class="col-md-9">
                 <FeedToggle Filter="_filter" OnFilterChanged="(newFilter) => OnFilterChanged(newFilter)" />
 
-                @if(_articleReponse is not null)
+                @if (ArticleState?.Value is not null &&
+                    !ArticleState.Value.IsLoadingArticles)
                 {
-                    foreach(var article in _articleReponse.Articles)
+                    foreach (var article in ArticleState?.Value.Articles)
                     {
                         <ArticleComponent @key=article Article="article" ></ArticleComponent>
                     }
@@ -44,30 +47,29 @@
 
 @code
 {
-    private MultipleArticlesResponse? _articleReponse;
     private ArticleFilter _filter = new ArticleFilter();
 
-    protected override async Task OnInitializedAsync()
+    [Inject]
+    public IDispatcher Dispatcher { get; set; }
+
+    [Inject]
+    private IState<ArticleState> ArticleState { get; set; }
+
+    protected override void OnInitialized()
     {
-        await LoadArticlesAsync();
+        base.OnInitialized();
+        Dispatcher.Dispatch(new FetchArticlesAction(_filter));
     }
 
-    private async void OnPopularTagSelected(string tag)
+    private void OnPopularTagSelected(string tag)
     {
         _filter = _filter with { Tag = tag, FeedType = FeedType.Tag };
-        await LoadArticlesAsync();        
+        Dispatcher.Dispatch(new FetchArticlesAction(_filter));
     }
     
-    private async Task OnFilterChanged(ArticleFilter newFilter)
+    private void OnFilterChanged(ArticleFilter newFilter)
     {
         _filter = newFilter;
-        await LoadArticlesAsync();
-    }
-
-    private async Task LoadArticlesAsync()
-    {
-        _articleReponse = null;
-        _articleReponse = await ArticleService.GetArticlesAsync(_filter);
-        StateHasChanged();
+        Dispatcher.Dispatch(new FetchArticlesAction(_filter));
     }
 }

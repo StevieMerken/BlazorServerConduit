@@ -1,6 +1,6 @@
 
 using BlazorServerConduit.Services;
-using BlazorServerConduit.Store;
+using BlazorServerConduit.Store.Articles;
 using Fluxor;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
