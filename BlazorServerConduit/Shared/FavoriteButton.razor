@@ -25,12 +25,19 @@
 
     [Parameter]
     public bool ShowText { get; set; }
-    
+
     [Inject]
     public IDispatcher Dispatcher { get; set; }
 
-    private async void OnSubmit()
+    protected override void OnParametersSet()
     {
+        base.OnParametersSet();
+        _isSubmitting = false;
+    }
+
+    private void OnSubmit()
+    {
+        _isSubmitting = true;
         if (Article.Favorited)
         {
             Dispatcher.Dispatch(new UnfavoriteArticleAction(Article.Slug));

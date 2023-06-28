@@ -1,5 +1,6 @@
-﻿@inherits MyComponentBase
-@inject ProfileService ProfileService
+﻿@using BlazorServerConduit.Store.Articles.Actions;
+@using Fluxor;
+@inherits MyComponentBase
 
 <button class="btn btn-sm action-btn @_classes @(Author.Following ? "btn-secondary": "btn-outline-secondary") @(_isSubmitting ? "disabled":"")" @attributes=_attributes @onclick="OnSubmit">
     <i class="ion-plus-round"></i>
@@ -12,31 +13,25 @@
     [Parameter, EditorRequired]
     public Profile Author { get; set; }
 
-    private async void OnSubmit()
-    {
-        try
-        {
-            _isSubmitting = true;
-            ApiResponse<ProfileResponse> response;
-            if (Author.Following) 
-            {
-                response = await ProfileService.UnfollowProfileAsync(Author.UserName);
-            }
-            else
-            {
-                response = await ProfileService.FollowProfileAsync(Author.UserName);
-            }
+    [Inject]
+    public IDispatcher Dispatcher { get; set; }
 
-            if (response.IsSuccess)
-            {
-                //TODO should be global update
-                Author = response.SuccessData.Profile;
-            }
-        }
-        finally
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _isSubmitting = false;
+    }
+
+    private void OnSubmit()
+    {
+        _isSubmitting = true;
+        if (Author.Following)
         {
-            _isSubmitting = false;
-            StateHasChanged();
+            Dispatcher.Dispatch(new UnfollowAuthorAction(Author.UserName));
+        }
+        else
+        {
+            Dispatcher.Dispatch(new FollowAuthorAction(Author.UserName));
         }
     }
 }

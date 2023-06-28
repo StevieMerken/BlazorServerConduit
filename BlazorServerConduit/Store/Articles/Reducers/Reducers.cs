@@ -82,6 +82,24 @@ namespace BlazorServerConduit.Store.Articles.Reducers
             };
         }
 
+        [ReducerMethod]
+        public static ArticleState ReduceFollowAuthorResultAction(ArticleState state, FollowAuthorResultAction action)
+        {
+            return state = state with
+            {
+                SelectedArticle = UpdateAuthor(state.SelectedArticle, action.Profile)
+            };
+        }
+
+        [ReducerMethod]
+        public static ArticleState ReduceUnfollowAuthorResultAction(ArticleState state, UnfollowAuthorResultAction action)
+        {
+            return state = state with
+            {
+                SelectedArticle = UpdateAuthor(state.SelectedArticle, action.Profile)
+            };
+        }
+
         private static void ReplaceArticleInArray(Article[] articles, Article newArticle)
         {
             int indexOfChangedArticle = Array.FindIndex(articles, (a) => a.Slug == newArticle.Slug);
@@ -90,6 +108,19 @@ namespace BlazorServerConduit.Store.Articles.Reducers
             {
                 articles[indexOfChangedArticle] = newArticle;
             }
+        }
+
+        private static Article UpdateAuthor(Article article, Profile newProfile)
+        {
+            if (article?.Author.UserName == newProfile.UserName)
+            {
+                return article with
+                {
+                    Author = newProfile
+                };
+            }
+
+            return article;
         }
     }
 }
