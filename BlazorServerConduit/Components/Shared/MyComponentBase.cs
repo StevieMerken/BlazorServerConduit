@@ -1,7 +1,7 @@
 ﻿using Fluxor.Blazor.Web.Components;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorServerConduit.Shared
+namespace BlazorServerConduit.Components.Shared
 {
     /// <summary>
     /// See https://github.com/dotnet/aspnetcore/issues/45230

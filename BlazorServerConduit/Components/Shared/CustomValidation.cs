@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorServerConduit.Shared
+namespace BlazorServerConduit.Components.Shared
 {
     public class CustomValidation : ComponentBase
     {

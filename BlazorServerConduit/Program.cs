@@ -1,4 +1,6 @@
 
+using BlazorServerConduit;
+using BlazorServerConduit.Components;
 using BlazorServerConduit.Services;
 using BlazorServerConduit.Store.Articles;
 using Fluxor;
@@ -12,7 +14,8 @@ builder.Services.AddFluxor(options => options.ScanAssemblies(currentAssembly));
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -49,7 +52,9 @@ app.UseAuthorization();
 
 app.UseRouting();
 
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.UseAntiforgery();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.Run();
