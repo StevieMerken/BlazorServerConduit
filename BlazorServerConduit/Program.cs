@@ -57,4 +57,6 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
+app.MapFallbackToPage("/_Host");
+
 app.Run();
